@@ -1,0 +1,1 @@
+kubeadm join 172.31.44.213:6443 --token xeomqq.jjnygpjc4xbnh9y4 --discovery-token-ca-cert-hash sha256:4103219931e33b0f608fd2dcb24414659fb938aa12765f4a257ef557e5fe38d2 

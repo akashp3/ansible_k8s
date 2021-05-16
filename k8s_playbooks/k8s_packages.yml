@@ -1,6 +1,7 @@
 ---
 - hosts: all
   become: true
+
   tasks: 
   - name: Add an apt signing key for Kubernetes
     apt_key:

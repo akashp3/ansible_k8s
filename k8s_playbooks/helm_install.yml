@@ -1,0 +1,24 @@
+---
+- hosts: master
+  become: yes
+  vars:
+    helm_version: v3.2.1
+
+  tasks:
+  - name: Retrieve helm binary archive.
+    unarchive:
+      src: https://get.helm.sh/helm-{{ helm_version }}-linux-amd64.tar.gz
+      dest: /tmp
+      creates: /usr/local/bin/helm
+      remote_src: yes
+
+  - name: Move helm binary into place.
+    command: cp /tmp/linux-amd64/helm /usr/local/bin/helm
+    args:
+      creates: /usr/local/bin/helm
+
+  - name: create helm soft link
+    file:
+      src: "/usr/local/bin/helm"
+      dest: "/usr/bin/helm"
+      state: link

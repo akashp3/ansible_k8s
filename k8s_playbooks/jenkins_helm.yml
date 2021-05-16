@@ -1,0 +1,26 @@
+---
+- hosts: master
+  become: yes
+  vars:
+    helm_chart_url: "https://charts.jenkins.io"
+    chart: "jenkinsci/jenkins"
+
+  tasks:
+  - name: Add helm repo
+    shell: |
+      helm repo add jenkinsci https://charts.jenkins.io
+      helm repo update
+  
+  - name: Mount Jenkins volume & RBAC policy  
+    shell: |
+      kubectl create namespace jenkins
+      kubectl apply -n jenkins -f https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-volume.yaml
+      kubectl apply -n jenkins -f https://raw.githubusercontent.com/jenkins-infra/jenkins.io/master/content/doc/tutorials/kubernetes/installing-jenkins-on-kubernetes/jenkins-sa.yaml
+
+  - name: Copy the file from master to mwiapp02
+    copy: src=./jenkins-value.yaml dest=/tmp/
+
+  - name: Install Jenkins
+    shell: |
+      pwd
+      helm install jenkins -n jenkins -f /tmp/jenkins-value.yaml {{ chart }}
